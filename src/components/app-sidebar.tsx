@@ -1,150 +1,126 @@
 "use client"
 
-import * as React from "react"
-import {
-  GraduationCap,
-  Users,
-  BookOpen,
-  Calendar,
-  ClipboardList,
-  Library,
-  Settings2,
-  School,
-  Building2,
-  DollarSign,
-  UserCog,
-  Bell,
-  BarChart,
-  MessageSquare,
-  LifeBuoy,
-} from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
 } from "@/components/ui/sidebar"
+import {
+  Bell,
+  BookOpen,
+  Calendar,
+  ClipboardList,
+  Command,
+  Frame,
+  Gauge,
+  Library,
+  LucideIcon,
+  Map,
+  PieChart,
+  SquareTerminal,
+  User,
+} from "lucide-react"
+import React from "react"
+import { NavMain } from "./nav-main"
+import { TeamSwitcher } from "./team-switcher"
+import { NavProjects } from "./nav-projects"
+import { NavUser } from "./nav-user"
+
+export interface MenuItem {
+  title: string
+  url: string
+  icon: LucideIcon
+}
 
 const data = {
   user: {
-    name: "Admin User",
-    email: "admin@college.edu",
-    avatar: "/avatars/admin.jpg",
+    name: "John Doe",
+    email: "john.doe@example.com",
+    avatar: "/avatars/student.jpg",
   },
-  departments: [
-    { name: "Computer Science", logo: School, plan: "Department" },
-    { name: "Engineering", logo: Building2, plan: "Department" },
-    { name: "Business School", logo: DollarSign, plan: "Department" },
+  teams: [
+    {
+      name: "Computer Science Dept.",
+      logo: Gauge,
+      plan: "Enrolled",
+    },
+    {
+      name: "Mathematics Club",
+      logo: Command,
+      plan: "Member",
+    },
   ],
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
-      icon: BarChart,
+      url: "/student/dashboard",
+      icon: SquareTerminal,
       isActive: true,
       items: [
-        { title: "Overview", url: "/dashboard/overview" },
-        { title: "Analytics", url: "/dashboard/analytics" },
-        { title: "Reports", url: "/dashboard/reports" },
+        { title: "Overview", url: "/student/dashboard" },
+        { title: "Progress", url: "/student/progress" },
       ],
     },
     {
-      title: "Students",
-      url: "/students",
-      icon: GraduationCap,
-      items: [
-        { title: "All Students", url: "/students/all" },
-        { title: "Admissions", url: "/students/admissions" },
-        { title: "Attendance", url: "/students/attendance" },
-        { title: "Performance", url: "/students/performance" },
-        { title: "Student Portal", url: "/students/portal" }, // 🔥 NEW FEATURE
-      ],
-    },
-    {
-      title: "Faculty",
-      url: "/faculty",
-      icon: Users,
-      items: [
-        { title: "Directory", url: "/faculty/directory" },
-        { title: "Schedules", url: "/faculty/schedules" },
-        { title: "Departments", url: "/faculty/departments" },
-      ],
-    },
-    {
-      title: "Academics",
-      url: "/academics",
+      title: "Courses",
+      url: "/student/courses",
       icon: BookOpen,
       items: [
-        { title: "Courses", url: "/academics/courses" },
-        { title: "Programs", url: "/academics/programs" },
-        { title: "Curriculum", url: "/academics/curriculum" },
-        { title: "Assignments", url: "/academics/assignments" }, // 🔥 NEW FEATURE
-        { title: "Examinations", url: "/academics/exams" }, // 🔥 NEW FEATURE
+        { title: "Current Courses", url: "/student/courses" },
+        { title: "Completed Courses", url: "/student/completed-courses" },
       ],
     },
     {
-      title: "Schedule",
-      url: "/schedule",
+      title: "Assignments",
+      url: "/student/assignments",
+      icon: ClipboardList,
+      items: [
+        { title: "Upcoming", url: "/student/assignments/upcoming" },
+        { title: "Submitted", url: "/student/assignments/submitted" },
+      ],
+    },
+    {
+      title: "Exams",
+      url: "/student/exams",
       icon: Calendar,
       items: [
-        { title: "Class Schedule", url: "/schedule/classes" },
-        { title: "Exam Schedule", url: "/schedule/exams" },
-        { title: "Events", url: "/schedule/events" },
+        { title: "Schedule", url: "/student/exams/schedule" },
+        { title: "Results", url: "/student/exams/results" },
       ],
     },
     {
       title: "Library",
-      url: "/library",
+      url: "/student/library",
       icon: Library,
-      items: [
-        { title: "Catalog", url: "/library/catalog" },
-        { title: "Issue/Return", url: "/library/transactions" },
-        { title: "Digital Resources", url: "/library/digital" },
-      ],
     },
     {
-      title: "Administration",
-      url: "/admin",
-      icon: UserCog,
-      items: [
-        { title: "Staff Management", url: "/admin/staff" },
-        { title: "Resources", url: "/admin/resources" },
-        { title: "Facilities", url: "/admin/facilities" },
-        { title: "Finance", url: "/admin/finance" }, // 🔥 NEW FEATURE
-      ],
+      title: "Profile",
+      url: "/student/profile",
+      icon: User,
     },
     {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings2,
-      items: [
-        { title: "General", url: "/settings/general" },
-        { title: "Notifications", url: "/settings/notifications" },
-        { title: "Security", url: "/settings/security" },
-      ],
-    },
-    {
-      title: "Help Center",
-      url: "/help",
-      icon: LifeBuoy, // 🔥 NEW FEATURE
-      items: [
-        { title: "FAQs", url: "/help/faqs" },
-        { title: "Guides", url: "/help/guides" },
-        { title: "Support", url: "/help/support" },
-      ],
+      title: "Notifications",
+      url: "/student/notifications",
+      icon: Bell,
     },
   ],
-  quickAccess: [
-    { name: "Attendance Records", url: "/attendance", icon: ClipboardList },
-    { name: "Notifications", url: "/notifications", icon: Bell },
-    { name: "Reports", url: "/reports", icon: BarChart },
-    { name: "Messages", url: "/messages", icon: MessageSquare }, // 🔥 NEW FEATURE
+  projects: [
+    {
+      name: "AI Research",
+      url: "/student/projects/ai-research",
+      icon: Frame,
+    },
+    {
+      name: "Mathematics Club",
+      url: "/student/projects/math-club",
+      icon: PieChart,
+    },
+    {
+      name: "Geography Field Work",
+      url: "/student/projects/geo-fieldwork",
+      icon: Map,
+    },
   ],
 }
 
@@ -152,16 +128,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.departments} />
+        <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.quickAccess} />
+        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }

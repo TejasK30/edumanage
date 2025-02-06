@@ -61,7 +61,7 @@ export function LoginForm({
       }
 
       localStorage.setItem("token", result.token)
-      router.push("/dashboard")
+      router.push("/student-dashboard")
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unexpected error occurred"

@@ -67,31 +67,68 @@ const HomePage = () => {
             </div>
           </div>
 
-          {mobileMenuOpen && (
-            <div className="md:hidden bg-background border-t">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {NAVIGATION.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className="block px-3 py-2 text-base hover:bg-muted rounded-lg"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <div className="px-3 py-2 space-y-2">
-                  <Link href="/login" className="block">
-                    <Button variant="outline" className="w-full">
-                      Log in
-                    </Button>
-                  </Link>
-                  <Link href="/signup" className="block">
-                    <Button className="w-full">Sign up</Button>
-                  </Link>
-                </div>
+          <div
+            className={`
+              md:hidden 
+              bg-background 
+              border-t 
+              overflow-hidden
+              transition-all 
+              duration-300 
+              ease-in-out
+              ${mobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+            `}
+          >
+            <div
+              className={`
+              px-2 pt-2 pb-3 space-y-1
+              transform transition-transform duration-300
+              ${mobileMenuOpen ? "translate-y-0" : "-translate-y-4"}
+            `}
+            >
+              {NAVIGATION.map((item, index) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={`
+                    block px-3 py-2 text-base hover:bg-muted rounded-lg
+                    transform transition-all duration-300 delay-[${
+                      index * 50
+                    }ms]
+                    ${
+                      mobileMenuOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-4 opacity-0"
+                    }
+                  `}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div
+                className={`
+                px-3 py-2 space-y-2
+                transform transition-all duration-300 delay-[${
+                  NAVIGATION.length * 50
+                }ms]
+                ${
+                  mobileMenuOpen
+                    ? "translate-x-0 opacity-100"
+                    : "translate-x-4 opacity-0"
+                }
+              `}
+              >
+                <Link href="/login" className="block">
+                  <Button variant="outline" className="w-full">
+                    Log in
+                  </Button>
+                </Link>
+                <Link href="/signup" className="block">
+                  <Button className="w-full">Sign up</Button>
+                </Link>
               </div>
             </div>
-          )}
+          </div>
         </nav>
 
         <main className="pt-16">

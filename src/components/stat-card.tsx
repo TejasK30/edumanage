@@ -9,7 +9,7 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, change }) => (
-  <Card className="bg-washed-purple-50 border-washed-purple-200 shadow-lg hover:shadow-xl transition-shadow dark:bg-card dark:border-muted">
+  <Card className="w-full bg-washed-purple-50 border-washed-purple-200 shadow-lg hover:shadow-xl transition-shadow dark:bg-card dark:border-muted">
     <CardHeader className="flex flex-row items-center justify-between pb-2">
       <CardTitle className="text-sm font-medium text-Neutrals/neutrals-10 dark:text-foreground">
         {title}
