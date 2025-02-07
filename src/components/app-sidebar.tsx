@@ -15,7 +15,6 @@ import {
   Frame,
   Gauge,
   Library,
-  LucideIcon,
   Map,
   PieChart,
   SquareTerminal,
@@ -23,15 +22,9 @@ import {
 } from "lucide-react"
 import React from "react"
 import { NavMain } from "./nav-main"
-import { TeamSwitcher } from "./team-switcher"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
-
-export interface MenuItem {
-  title: string
-  url: string
-  icon: LucideIcon
-}
+import { TeamSwitcher } from "./team-switcher"
 
 const data = {
   user: {

@@ -1,10 +1,5 @@
+import { TitleSectionProps } from "@/lib/types"
 import React from "react"
-
-interface TitleSectionProps {
-  title: string
-  subheading?: string
-  pill: string
-}
 
 const TitleSection: React.FC<TitleSectionProps> = ({
   title,

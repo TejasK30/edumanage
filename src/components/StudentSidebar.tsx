@@ -21,7 +21,6 @@ import {
   GraduationCap,
   Home,
   Library,
-  LucideIcon,
   MessageSquare,
   School,
   User,
@@ -32,12 +31,6 @@ import { NavMain } from "./nav-main"
 import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
-
-export interface MenuItem {
-  title: string
-  url: string
-  icon: LucideIcon
-}
 
 const data = {
   user: {

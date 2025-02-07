@@ -1,12 +1,5 @@
-import { ReactNode } from "react"
+import { StatCardProps } from "@/lib/types"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-
-interface StatCardProps {
-  title: string
-  value: string | number
-  icon: ReactNode
-  change: string
-}
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, change }) => (
   <Card className="w-full bg-washed-purple-50 border-washed-purple-200 shadow-lg hover:shadow-xl transition-shadow dark:bg-card dark:border-muted">

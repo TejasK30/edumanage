@@ -1,10 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto"
-
-interface JWTPayload {
-  userId: string
-  exp: number
-  iat: number
-}
+import { JWTPayload } from "./types"
 
 export class JWT {
   private static readonly algorithm = "sha256"
