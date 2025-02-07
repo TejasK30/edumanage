@@ -9,6 +9,16 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core"
 
+export const colleges = pgTable("colleges", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  rating: text("rating").notNull(),
+  type: text("type").notNull(),
+  departments: text("departments").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   customId: text("custom_id").unique().notNull(),
@@ -28,6 +38,9 @@ export const studentProfiles = pgTable("student_profiles", {
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
+  collegeId: uuid("college_id")
+    .references(() => colleges.id)
+    .notNull(),
   firstName: text("first_name").notNull(),
   middleName: text("middle_name"),
   lastName: text("last_name").notNull(),
@@ -44,6 +57,9 @@ export const teacherProfiles = pgTable("teacher_profiles", {
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
+  collegeId: uuid("college_id")
+    .references(() => colleges.id)
+    .notNull(),
   firstName: text("first_name").notNull(),
   middleName: text("middle_name"),
   lastName: text("last_name").notNull(),
@@ -57,6 +73,9 @@ export const staffProfiles = pgTable("staff_profiles", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .references(() => users.id)
+    .notNull(),
+  collegeId: uuid("college_id")
+    .references(() => colleges.id)
     .notNull(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
