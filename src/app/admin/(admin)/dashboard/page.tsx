@@ -35,7 +35,6 @@ const attendanceData = [
 ]
 
 export default function DashboardPage() {
-  // Extended Statistics data
   const stats = [
     {
       title: "Total Students",
@@ -101,7 +100,6 @@ export default function DashboardPage() {
     },
   ]
 
-  // Extended Recent Activities data
   const recentActivities = [
     {
       title: "Mid-term Examinations",
@@ -153,7 +151,6 @@ export default function DashboardPage() {
     },
   ]
 
-  // Extended Upcoming Events data
   const upcomingEvents = [
     {
       title: "Tech Symposium",

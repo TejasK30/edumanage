@@ -4,7 +4,7 @@ import Link from "next/link"
 const Logo = () => {
   return (
     <>
-      <div>
+      <div className="bg-muted">
         <div className="flex w-full max-w-sm flex-col gap-6">
           <Link
             href="#"

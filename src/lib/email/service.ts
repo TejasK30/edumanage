@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import { emailConfig } from "./config"
-import { createVerificationEmail } from "./templates"
+import { createVerificationEmail } from "./templates/verificationEmail"
 
 class EmailService {
   private transporter: nodemailer.Transporter

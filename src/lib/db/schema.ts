@@ -11,6 +11,8 @@ import {
 
 export const colleges = pgTable("colleges", {
   id: uuid("id").defaultRandom().primaryKey(),
+  code: text("code").unique().notNull(),
+  signupLink: text("signup_link").unique().notNull(),
   name: text("name").notNull(),
   address: text("address").notNull(),
   rating: text("rating").notNull(),
