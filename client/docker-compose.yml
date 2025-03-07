@@ -1,0 +1,26 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: edumanage
+      POSTGRES_PASSWORD: edumanage@pass
+      POSTGRES_DB: edumanage
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
