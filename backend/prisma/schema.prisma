@@ -1,0 +1,602 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model College {
+  id           String           @id @default(uuid())
+  code         String           @unique
+  signupLink   String           @unique @map("signup_link")
+  name         String
+  address      String
+  rating       String
+  type         String
+  departments  String
+  createdAt    DateTime         @default(now()) @map("created_at")
+  teachers     TeacherProfile[]
+  staffMembers StaffProfile[]
+  classes      Class[]
+  students     StudentProfile[]
+
+  @@map("colleges")
+}
+
+model User {
+  id                     String                  @id @default(uuid())
+  customId               String                  @unique @map("custom_id")
+  name                   String
+  email                  String                  @unique
+  phone                  Json?                   @unique @map("phone")
+  passwordHash           String                  @map("password_hash")
+  role                   String                  @default("student")
+  isVerified             Boolean                 @default(false) @map("is_verified")
+  verificationOTP        String?                 @map("verification_otp")
+  verificationOTPExpiry  DateTime?               @map("verification_otp_expiry")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  lastSeen               DateTime                @default(now()) @map("last_seen")
+  fcmToken               String?                 @map("fcm_token")
+  isOnline               Boolean                 @default(false) @map("is_online")
+  studentProfile         StudentProfile?
+  teacherProfile         TeacherProfile?
+  staffProfile           StaffProfile?
+  phoneNumbers           PhoneNumber[]
+  sentMessages           Message[]               @relation("SentMessages")
+  receivedMessages       Message[]               @relation("ReceivedMessages")
+  notifications          Notification[]          @relation("UserNotifications")
+  sentNotifications      Notification[]          @relation("SentNotifications")
+  comments               Comment[]
+  NotificationPreference NotificationPreference?
+
+  @@map("users")
+}
+
+model SemesterSubject {
+  id           String         @id @default(uuid())
+  studentId    String         @map("student_id")
+  semester     Int
+  academicYear String         @map("academic_year")
+  subjects     Json
+  credits      Int
+  isActive     Boolean        @default(true) @map("is_active")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @default(now()) @map("updated_at")
+  student      StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("semester_subjects")
+}
+
+model StudentProfile {
+  id                   String                @id @default(uuid())
+  userId               String                @unique @map("user_id")
+  fullName             String                @map("full_name")
+  phoneNumber          String                @map("phone_number")
+  parentsPhone         String                @map("parents_phone")
+  email                String                @unique
+  address              String
+  caste                String?
+  admissionYear        Int?                  @map("admission_year")
+  currentSemester      Int                   @map("current_semester")
+  currentAcademicYear  String                @map("current_academic_year")
+  totalCredits         Int                   @default(0) @map("total_credits")
+  course               String?
+  fees                 Decimal
+  scholarship          Boolean               @default(false)
+  dues                 Decimal
+  department           String
+  className            String                @map("classname")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @default(now()) @map("updated_at")
+  user                 User                  @relation(fields: [userId], references: [id])
+  semesterSubjects     SemesterSubject[]
+  studentFees          StudentFee[]
+  feePayments          FeePayment[]
+  feeExtensionRequests FeeExtensionRequest[]
+  feedbacks            Feedback[]
+  jobApplications      JobApplication[]
+  learningPaths        StudentLearningPath[]
+  performances         StudentPerformance[]
+  attendanceRecords    Attendance[]
+  grades               Grading[]
+  semesterResults      SemesterResult[]
+  subjectResults       SubjectResult[]
+  semesterAttendance   SemesterAttendance[]
+  backlogRecords       BacklogRecord[]
+  gradeImprovements    GradeImprovement[]
+  academicProgressions AcademicProgression[]
+  academicAchievements AcademicAchievement[]
+  class                Class?                @relation(fields: [classId], references: [id])
+  classId              String?               @map("class_id")
+  dailyAttendance      DailyAttendance[]
+  College              College?              @relation(fields: [collegeId], references: [id])
+  collegeId            String?
+
+  @@map("students")
+}
+
+model TeacherProfile {
+  id                 String              @id @default(uuid())
+  userId             String              @unique @map("user_id")
+  collegeId          String              @map("college_id")
+  firstName          String              @map("first_name")
+  middleName         String?             @map("middle_name")
+  lastName           String              @map("last_name")
+  department         String
+  subjects           Json?
+  salary             Int?
+  createdAt          DateTime            @default(now()) @map("created_at")
+  user               User                @relation(fields: [userId], references: [id])
+  college            College             @relation(fields: [collegeId], references: [id])
+  resources          TeacherResource[]
+  timetables         Timetable[]
+  gradingDone        Grading[]
+  feedbacksReceived  Feedback[]          @relation("TeacherFeedback")
+  classes            ClassTeacher[]
+  attendanceSessions AttendanceSession[]
+  lmsModules         LmsModule[]
+
+  @@map("teacher_profiles")
+}
+
+model StaffProfile {
+  id                  String                @id @default(uuid())
+  userId              String                @unique @map("user_id")
+  collegeId           String                @map("college_id")
+  firstName           String                @map("first_name")
+  lastName            String                @map("last_name")
+  roleTitle           String?               @map("role_title")
+  department          String?
+  createdAt           DateTime              @default(now()) @map("created_at")
+  user                User                  @relation(fields: [userId], references: [id])
+  college             College               @relation(fields: [collegeId], references: [id])
+  jobPostings         JobPosting[]
+  feeExtensionReviews FeeExtensionRequest[] @relation("ReviewedBy")
+  academicDecisions   AcademicProgression[] @relation("DecidedBy")
+
+  @@map("staff_profiles")
+}
+
+model PhoneNumber {
+  id          String @id @default(uuid())
+  userId      String @map("user_id")
+  phoneNumber String @map("phone_number")
+  user        User   @relation(fields: [userId], references: [id])
+
+  @@map("phone_numbers")
+}
+
+model StudentFee {
+  id                      String         @id @default(uuid())
+  studentId               String         @map("student_id")
+  baseFees                Int            @map("base_fees")
+  isScholarshipApplicable Boolean        @default(false) @map("is_scholarship_applicable")
+  discountedFees          Int?           @map("discounted_fees")
+  dueDate                 DateTime       @map("due_date")
+  createdAt               DateTime       @default(now()) @map("created_at")
+  student                 StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("student_fees")
+}
+
+model FeePayment {
+  id                String         @id @default(uuid())
+  studentId         String         @map("student_id")
+  amount            Int
+  paymentDate       DateTime       @default(now()) @map("payment_date")
+  paymentMethod     String?        @map("payment_method")
+  installmentNumber Int?           @map("installment_number")
+  student           StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("fee_payments")
+}
+
+model FeeExtensionRequest {
+  id                  String         @id @default(uuid())
+  studentId           String         @map("student_id")
+  reason              String
+  requestedNewDueDate DateTime       @map("requested_new_due_date")
+  status              String         @default("pending")
+  reviewedBy          String?        @map("reviewed_by")
+  reviewedAt          DateTime?      @map("reviewed_at")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  student             StudentProfile @relation(fields: [studentId], references: [id])
+  reviewer            StaffProfile?  @relation("ReviewedBy", fields: [reviewedBy], references: [id])
+
+  @@map("fee_extension_requests")
+}
+
+model Feedback {
+  id           String          @id @default(uuid())
+  studentId    String          @map("student_id")
+  teacherId    String?         @map("teacher_id")
+  feedbackType String          @map("feedback_type")
+  message      String
+  rating       Int?
+  createdAt    DateTime        @default(now()) @map("created_at")
+  student      StudentProfile  @relation(fields: [studentId], references: [id])
+  teacher      TeacherProfile? @relation("TeacherFeedback", fields: [teacherId], references: [id])
+
+  @@map("feedbacks")
+}
+
+model JobPosting {
+  id           String           @id @default(uuid())
+  postedBy     String           @map("posted_by")
+  jobTitle     String           @map("job_title")
+  description  String
+  requirements String?
+  postedAt     DateTime         @default(now()) @map("posted_at")
+  closingDate  DateTime         @map("closing_date")
+  staff        StaffProfile     @relation(fields: [postedBy], references: [id])
+  applications JobApplication[]
+
+  @@map("job_postings")
+}
+
+model JobApplication {
+  id              String         @id @default(uuid())
+  jobId           String         @map("job_id")
+  studentId       String         @map("student_id")
+  applicationDate DateTime       @default(now()) @map("application_date")
+  status          String         @default("applied")
+  job             JobPosting     @relation(fields: [jobId], references: [id])
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("job_applications")
+}
+
+model TeacherResource {
+  id           String         @id @default(uuid())
+  teacherId    String         @map("teacher_id")
+  title        String
+  resourceType String         @map("resource_type")
+  content      String?
+  metadata     Json?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  teacher      TeacherProfile @relation(fields: [teacherId], references: [id])
+
+  @@map("teacher_resources")
+}
+
+model StudentLearningPath {
+  id              String         @id @default(uuid())
+  studentId       String         @map("student_id")
+  recommendations Json
+  generatedAt     DateTime       @default(now()) @map("generated_at")
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("student_learning_paths")
+}
+
+model StudentPerformance {
+  id                   String         @id @default(uuid())
+  studentId            String         @map("student_id")
+  subject              String
+  score                Int?
+  attendancePercentage Int?           @map("attendance_percentage")
+  remarks              String?
+  recordedAt           DateTime       @default(now()) @map("recorded_at")
+  student              StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("student_performance")
+}
+
+model Attendance {
+  id        String         @id @default(uuid())
+  studentId String         @map("student_id")
+  date      DateTime       @map("date")
+  isPresent Boolean        @default(true) @map("is_present")
+  student   StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("attendance")
+}
+
+model Timetable {
+  id        String         @id @default(uuid())
+  className String         @map("class_name")
+  subject   String
+  teacherId String         @map("teacher_id")
+  dayOfWeek String         @map("day_of_week")
+  startTime DateTime       @map("start_time")
+  endTime   DateTime       @map("end_time")
+  teacher   TeacherProfile @relation(fields: [teacherId], references: [id])
+
+  @@map("timetables")
+}
+
+model Grading {
+  id        String         @id @default(uuid())
+  studentId String         @map("student_id")
+  teacherId String         @map("teacher_id")
+  subject   String
+  grade     String
+  comments  String?
+  gradedAt  DateTime       @default(now()) @map("graded_at")
+  student   StudentProfile @relation(fields: [studentId], references: [id])
+  teacher   TeacherProfile @relation(fields: [teacherId], references: [id])
+
+  @@map("grading")
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
+  content    String
+  createdAt  DateTime @default(now()) @map("created_at")
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+
+  @@map("messages")
+}
+
+model SemesterResult {
+  id             String          @id @default(uuid())
+  studentId      String          @map("student_id")
+  semester       Int
+  academicYear   String          @map("academic_year")
+  totalMarks     Decimal         @map("total_marks")
+  obtainedMarks  Decimal         @map("obtained_marks")
+  percentage     Decimal
+  sgpa           Decimal
+  cgpa           Decimal
+  totalCredits   Int             @map("total_credits")
+  earnedCredits  Int             @map("earned_credits")
+  status         String
+  remarks        String?
+  declaredAt     DateTime        @map("declared_at")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @default(now()) @map("updated_at")
+  student        StudentProfile  @relation(fields: [studentId], references: [id])
+  subjectResults SubjectResult[]
+
+  @@map("semester_results")
+}
+
+model SubjectResult {
+  id               String         @id @default(uuid())
+  semesterResultId String         @map("semester_result_id")
+  studentId        String         @map("student_id")
+  subjectCode      String         @map("subject_code")
+  subjectName      String         @map("subject_name")
+  credits          Int
+  internalMarks    Decimal        @map("internal_marks")
+  externalMarks    Decimal        @map("external_marks")
+  totalMarks       Decimal        @map("total_marks")
+  grade            String
+  gradePoints      Decimal        @map("grade_points")
+  status           String
+  attempts         Int            @default(1)
+  isBacklog        Boolean        @default(false) @map("is_backlog")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  semesterResult   SemesterResult @relation(fields: [semesterResultId], references: [id])
+  student          StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("subject_results")
+}
+
+model SemesterAttendance {
+  id              String         @id @default(uuid())
+  studentId       String         @map("student_id")
+  semester        Int
+  academicYear    String         @map("academic_year")
+  subjectCode     String         @map("subject_code")
+  totalClasses    Int            @map("total_classes")
+  attendedClasses Int            @map("attended_classes")
+  percentage      Decimal
+  isShortage      Boolean        @default(false) @map("is_shortage")
+  shortageReason  String?        @map("shortage_reason")
+  exempted        Boolean        @default(false)
+  exemptionReason String?        @map("exemption_reason")
+  updatedAt       DateTime       @default(now()) @map("updated_at")
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("semester_attendance")
+}
+
+model BacklogRecord {
+  id                   String         @id @default(uuid())
+  studentId            String         @map("student_id")
+  subjectCode          String         @map("subject_code")
+  originalSemester     Int            @map("original_semester")
+  originalAcademicYear String         @map("original_academic_year")
+  examType             String         @map("exam_type")
+  attemptNumber        Int            @map("attempt_number")
+  examDate             DateTime       @map("exam_date")
+  marks                Decimal?
+  status               String
+  clearedDate          DateTime?      @map("cleared_date")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  student              StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("backlog_records")
+}
+
+model GradeImprovement {
+  id               String         @id @default(uuid())
+  studentId        String         @map("student_id")
+  subjectCode      String         @map("subject_code")
+  originalGrade    String         @map("original_grade")
+  originalSemester Int            @map("original_semester")
+  attemptDate      DateTime       @map("attempt_date")
+  newGrade         String?        @map("new_grade")
+  status           String
+  createdAt        DateTime       @default(now()) @map("created_at")
+  student          StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("grade_improvements")
+}
+
+model AcademicProgression {
+  id            String         @id @default(uuid())
+  studentId     String         @map("student_id")
+  academicYear  String         @map("academic_year")
+  semester      Int
+  status        String
+  cgpa          Decimal
+  totalBacklogs Int            @map("total_backlogs")
+  isPromoted    Boolean        @map("is_promoted")
+  remarks       String?
+  decidedBy     String         @map("decided_by")
+  decidedAt     DateTime       @default(now()) @map("decided_at")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  student       StudentProfile @relation(fields: [studentId], references: [id])
+  staff         StaffProfile   @relation("DecidedBy", fields: [decidedBy], references: [id])
+
+  @@map("academic_progression")
+}
+
+model AcademicAchievement {
+  id              String         @id @default(uuid())
+  studentId       String         @map("student_id")
+  semester        Int
+  academicYear    String         @map("academic_year")
+  achievementType String         @map("achievement_type")
+  description     String
+  awardedBy       String         @map("awarded_by")
+  awardedDate     DateTime       @map("awarded_date")
+  certificate     String?        @map("certificate_url")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+
+  @@map("academic_achievements")
+}
+
+model Class {
+  id                 String              @id @default(uuid())
+  name               String
+  year               Int
+  section            String?
+  department         String
+  collegeId          String              @map("college_id")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @default(now()) @map("updated_at")
+  college            College             @relation(fields: [collegeId], references: [id])
+  students           StudentProfile[]
+  teachers           ClassTeacher[]
+  attendanceSessions AttendanceSession[]
+
+  @@map("classes")
+}
+
+model ClassTeacher {
+  id          String         @id @default(uuid())
+  classId     String         @map("class_id")
+  teacherId   String         @map("teacher_id")
+  subject     String
+  isClassHead Boolean        @default(false) @map("is_class_head")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  class       Class          @relation(fields: [classId], references: [id])
+  teacher     TeacherProfile @relation(fields: [teacherId], references: [id])
+
+  @@map("class_teachers")
+}
+
+model AttendanceSession {
+  id                String            @id @default(uuid())
+  classId           String            @map("class_id")
+  teacherId         String            @map("teacher_id")
+  subject           String
+  date              DateTime          @default(now())
+  startTime         DateTime          @map("start_time")
+  endTime           DateTime?         @map("end_time")
+  status            String            @default("ongoing") // ongoing, completed
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @default(now()) @map("updated_at")
+  class             Class             @relation(fields: [classId], references: [id])
+  teacher           TeacherProfile    @relation(fields: [teacherId], references: [id])
+  studentAttendance DailyAttendance[]
+
+  @@map("attendance_sessions")
+}
+
+model DailyAttendance {
+  id        String            @id @default(uuid())
+  sessionId String            @map("session_id")
+  studentId String            @map("student_id")
+  status    String            @default("present") // present, absent, late
+  markedAt  DateTime          @default(now()) @map("marked_at")
+  remarks   String?
+  session   AttendanceSession @relation(fields: [sessionId], references: [id])
+  student   StudentProfile    @relation(fields: [studentId], references: [id])
+
+  @@map("daily_attendance")
+}
+
+// Notification System Models
+
+model Notification {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  senderId        String   @map("sender_id")
+  title           String
+  message         String
+  type            String // attendance, lms, general, etc.
+  relatedItemId   String?  @map("related_item_id")
+  relatedItemType String?  @map("related_item_type")
+  isRead          Boolean  @default(false) @map("is_read")
+  createdAt       DateTime @default(now()) @map("created_at")
+  user            User     @relation("UserNotifications", fields: [userId], references: [id])
+  sender          User     @relation("SentNotifications", fields: [senderId], references: [id])
+  isImportant     Boolean  @default(false) @map("is_important")
+
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id                 String  @id @default(uuid())
+  userId             String  @unique
+  emailNotifications Boolean @default(true)
+  pushNotifications  Boolean @default(true)
+  inAppNotifications Boolean @default(true)
+
+  // For specific notification types
+  assignmentNotifications   Boolean @default(true)
+  announcementNotifications Boolean @default(true)
+  gradeNotifications        Boolean @default(true)
+  messageNotifications      Boolean @default(true)
+
+  // Relationship
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notification_preferences")
+}
+
+// LMS Module Models
+
+model LmsModule {
+  id          String         @id @default(uuid())
+  teacherId   String         @map("teacher_id")
+  title       String
+  description String?
+  type        String // video, link, document, etc.
+  content     String
+  subject     String
+  classId     String         @map("class_id")
+  viewCount   Int            @default(0) @map("view_count")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @default(now()) @map("updated_at")
+  teacher     TeacherProfile @relation(fields: [teacherId], references: [id])
+  comments    Comment[]
+
+  @@map("lms_modules")
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  moduleId  String    @map("module_id")
+  userId    String    @map("user_id")
+  content   String
+  parentId  String?   @map("parent_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+  module    LmsModule @relation(fields: [moduleId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+
+  @@map("comments")
+}

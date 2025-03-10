@@ -1,0 +1,32 @@
+import React, { useEffect, useState } from "react"
+import { getUserNotifications } from "../lib/api/notificationApi"
+
+const StudentNotifications = ({ userId }: { userId: string }) => {
+  const [notifications, setNotifications] = useState([])
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const response = await getUserNotifications(userId, 10, 0)
+      setNotifications(response.data)
+    }
+
+    fetchNotifications()
+
+    const interval = setInterval(fetchNotifications, 5000)
+
+    return () => clearInterval(interval)
+  }, [userId])
+
+  return (
+    <div>
+      <h2>Notifications</h2>
+      <ul>
+        {notifications.map((notification: any) => (
+          <li key={notification.id}>{notification.message}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default StudentNotifications
