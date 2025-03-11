@@ -124,14 +124,15 @@ export interface User {
   avatar?: string
 }
 
-export interface Student {
+export type Student = {
   id: string
   name: string
-  email: string
-  enrollmentNumber: string
-  department: string
-  semester: number
-  profile?: StudentProfile
+  rollNumber: string
+  class: string
+  section: string
+  attendancePercentage: number
+  imageUrl?: string
+  hasPendingFees: boolean
 }
 
 export interface StudentProfile {
