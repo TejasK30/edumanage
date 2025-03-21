@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import usePasswordVisibility from "@/hooks/usePasswordVisibility"
+import api from "@/lib/api/api"
+import { useUserStore } from "@/store/user-store"
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Identifier is required"),
@@ -35,6 +37,7 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { passwordVisible, togglePasswordVisibility } = usePasswordVisibility()
+  const { setUser } = useUserStore()
 
   const {
     control,
@@ -48,20 +51,11 @@ export function LoginForm({
     setIsLoading(true)
     setError(null)
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      const result = await res.json()
+      const res = await api.post("/auth/login", data)
 
-      console.log(result)
+      setUser(res.data)
 
-      if (!res.ok) {
-        throw new Error(result.error || "Login failed")
-      }
-
-      await router.push("/student/dashboard")
+      router.push("/student/dashboard")
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred")
     } finally {

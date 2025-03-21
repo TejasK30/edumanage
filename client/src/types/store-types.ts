@@ -100,26 +100,6 @@ export interface Attendance {
   remarks?: string
 }
 
-export interface SemesterResult {
-  id: string
-  studentId: string
-  semester: number
-  academicYear: string
-  totalMarks: number
-  obtainedMarks: number
-  percentage: number
-  sgpa: number
-  cgpa: number
-  totalCredits: number
-  earnedCredits: number
-  status: string
-  remarks?: string
-  declaredAt: string
-  createdAt: string
-  updatedAt: string
-  subjectResults: SubjectResult[]
-}
-
 export interface SubjectResult {
   id: string
   semesterResultId: string
@@ -136,4 +116,70 @@ export interface SubjectResult {
   attempts: number
   isBacklog: boolean
   createdAt: string
+}
+
+export interface SemesterResult {
+  id: string
+  studentId: string
+  semester: number
+  academicYear: string
+  totalMarks: number
+  obtainedMarks: number
+  percentage: number
+  sgpa: number
+  cgpa: number
+  totalCredits: number
+  earnedCredits: number
+  status: string
+  remarks?: string
+  declaredAt: Date
+  subjectResults: SubjectResult[]
+}
+
+export interface Grading {
+  id: string
+  studentId: string
+  teacherId: string
+  subject: string
+  grade: string
+  comments?: string
+  gradedAt: Date
+}
+
+export interface SemesterSubject {
+  id: string
+  studentId: string
+  semester: number
+  academicYear: string
+  subjects: any // JSON in Prisma
+  credits: number
+  isActive: boolean
+}
+
+export interface AcademicProgression {
+  id: string
+  studentId: string
+  academicYear: string
+  semester: number
+  status: string
+  cgpa: number
+  totalBacklogs: number
+  isPromoted: boolean
+  remarks?: string
+  decidedBy: string
+  decidedAt: Date
+}
+
+export interface BacklogRecord {
+  id: string
+  studentId: string
+  subjectCode: string
+  originalSemester: number
+  originalAcademicYear: string
+  examType: string
+  attemptNumber: number
+  examDate: Date
+  marks?: number
+  status: string
+  clearedDate?: Date
 }

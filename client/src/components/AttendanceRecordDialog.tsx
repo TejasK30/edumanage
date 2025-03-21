@@ -1,24 +1,15 @@
-import React from "react"
-import { useStudentAttendanceStore } from "../store/studentAttendanceStore"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { AlertCircle } from "lucide-react"
+import React from "react"
+import { useStudentAttendanceStore } from "../store/studentAttendanceStore"
 
 const AttendanceRecordDialog: React.FC = () => {
   const { selectedRecord, showRecordDetails, setShowRecordDetails } =

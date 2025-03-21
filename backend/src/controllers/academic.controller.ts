@@ -326,7 +326,7 @@ export const createSemesterResult = async (
       return res.status(400).json({ error: "Missing required fields" })
     }
 
-    const result = await prisma.$transaction(async (prisma) => {
+    const result = await prisma.$transaction(async (prisma: any) => {
       const semesterResult = await prisma.semesterResult.create({
         data: {
           studentId,

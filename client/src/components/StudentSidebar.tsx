@@ -1,22 +1,17 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar"
+import { StudentNavItems } from "@/constants/studentConstants"
+import { Briefcase, School, Users } from "lucide-react"
+import React, { useEffect, useState } from "react"
 import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
-import { Briefcase, School, Users } from "lucide-react"
-import {
-  StudentNavItems,
-  StudentProjects,
-  StudentQuickAccess,
-} from "@/constants/studentConstants"
 
 type StudentSidebarProps = React.ComponentProps<typeof Sidebar> & {
   studentId?: string
@@ -90,8 +85,6 @@ export default function StudentSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={StudentNavItems} />
-        <NavProjects projects={StudentQuickAccess} />
-        <NavProjects projects={StudentProjects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={studentData.user} />

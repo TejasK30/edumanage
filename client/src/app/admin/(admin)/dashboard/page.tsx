@@ -2,14 +2,18 @@
 import AttendanceChart, {
   AttendanceData,
 } from "@/components/dashboard-components/AttendanceChart"
-import DashboardHeader from "@/components/dashboard-components/DashboardHeader"
+import PageHeader from "@/components/dashboard-components/page-header"
 import RecentActivities from "@/components/dashboard-components/RecentActivites"
 import StatsGrid from "@/components/dashboard-components/StatsGrid"
 import UpcomingEvents from "@/components/dashboard-components/UpcomingEvents"
 import {
+  AlertCircle,
   BookOpen,
+  Building,
   Calendar,
   Clock,
+  DollarSign,
+  FileText,
   GraduationCap,
   Library,
   MessageSquare,
@@ -204,9 +208,70 @@ const upcomingEvents = [
 export default function AdminDashboardPage() {
   return (
     <div className="w-full bg-background text-foreground transition-none min-h-screen pr-4 py-2">
-      <DashboardHeader title="Admin Dashboard" />
-      <StatsGrid stats={stats} />
+      <PageHeader title="Admin Dashboard" />
+      {/* Quick Access */}
+      <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+        <h3 className="text-lg font-medium mb-4">
+          Administrative Quick Access
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {[
+            {
+              title: "Manage Students",
+              icon: <Users className="h-5 w-5" />,
+              link: "/admin/students",
+            },
+            {
+              title: "Faculty & Staff",
+              icon: <GraduationCap className="h-5 w-5" />,
+              link: "/admin/faculty/list",
+            },
+            {
+              title: "Financial Overview",
+              icon: <DollarSign className="h-5 w-5" />,
+              link: "/admin/finances/overview",
+            },
+            {
+              title: "Academic Management",
+              icon: <BookOpen className="h-5 w-5" />,
+              link: "/admin/academics/management",
+            },
+            {
+              title: "Examination Portal",
+              icon: <FileText className="h-5 w-5" />,
+              link: "/admin/academics/exams",
+            },
+            {
+              title: "Placement Cell",
+              icon: <Building className="h-5 w-5" />,
+              link: "/admin/placements/companies",
+            },
+            {
+              title: "Communications",
+              icon: <MessageSquare className="h-5 w-5" />,
+              link: "/admin/communications/announcements",
+            },
+            {
+              title: "System Settings",
+              icon: <AlertCircle className="h-5 w-5" />,
+              link: "/admin/system/settings",
+            },
+          ].map((item, index) => (
+            <a
+              key={index}
+              href={item.link}
+              className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+            >
+              <div className="w-10 h-10 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-full mb-2">
+                {item.icon}
+              </div>
+              <span className="text-sm font-medium">{item.title}</span>
+            </a>
+          ))}
+        </div>
+      </div>
       <AttendanceChart data={attendanceData} />
+      <StatsGrid stats={stats} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
         <RecentActivities activities={recentActivities} />
         <UpcomingEvents events={upcomingEvents} />

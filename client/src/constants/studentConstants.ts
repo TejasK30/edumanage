@@ -7,24 +7,22 @@ import {
   Calendar,
   CheckSquare,
   ClipboardList,
+  Clock,
   Cpu,
+  CreditCard,
   FileText,
   Gauge,
   GraduationCap,
   Home,
+  Inbox,
   Library,
   MessageSquare,
-  School,
-  User,
-  Users,
-  BookMarked,
-  Link,
-  CreditCard,
-  Inbox,
-  Clock,
-  Trophy,
+  Pencil,
   Settings,
-  LifeBuoy,
+  Trophy,
+  User,
+  UserCog,
+  Zap,
 } from "lucide-react"
 
 export const StudentNavItems = [
@@ -38,6 +36,7 @@ export const StudentNavItems = [
     title: "Courses",
     url: "/student/courses",
     icon: BookOpen,
+    isActive: false,
     items: [
       {
         title: "Current Courses",
@@ -49,17 +48,13 @@ export const StudentNavItems = [
         url: "/student/courses/completed",
         icon: CheckSquare,
       },
-      {
-        title: "Learning Modules",
-        url: "/student/courses/modules",
-        icon: BookMarked,
-      },
     ],
   },
   {
     title: "Assignments",
     url: "/student/assignments",
     icon: ClipboardList,
+    isActive: false,
     items: [
       {
         title: "Upcoming",
@@ -82,6 +77,7 @@ export const StudentNavItems = [
     title: "Exams",
     url: "/student/exams",
     icon: Calendar,
+    isActive: false,
     items: [
       { title: "Schedule", url: "/student/exams/schedule", icon: Calendar },
       { title: "Results", url: "/student/exams/results", icon: FileText },
@@ -92,6 +88,7 @@ export const StudentNavItems = [
     title: "Attendance",
     url: "/student/attendance",
     icon: ClipboardList,
+    isActive: false,
     items: [
       {
         title: "Daily Attendance",
@@ -103,17 +100,13 @@ export const StudentNavItems = [
         url: "/student/attendance/semester",
         icon: FileText,
       },
-      {
-        title: "Shortage Warnings",
-        url: "/student/attendance/shortage",
-        icon: Bell,
-      },
     ],
   },
   {
     title: "Academics",
     url: "/student/academics",
     icon: GraduationCap,
+    isActive: false,
     items: [
       { title: "Grades", url: "/student/academics/grades", icon: Award },
       {
@@ -137,24 +130,20 @@ export const StudentNavItems = [
     title: "Laboratories",
     url: "/student/labs",
     icon: Cpu,
+    isActive: false,
     items: [
       {
         title: "Lab Schedules",
         url: "/student/labs/schedule",
         icon: Calendar,
       },
-      {
-        title: "Experiment Manuals",
-        url: "/student/labs/manuals",
-        icon: BookOpen,
-      },
-      { title: "Lab Reports", url: "/student/labs/reports", icon: FileText },
     ],
   },
   {
     title: "Fees & Payments",
     url: "/student/fees",
     icon: CreditCard,
+    isActive: false,
     items: [
       { title: "Fee Details", url: "/student/fees/details", icon: FileText },
       { title: "Payment History", url: "/student/fees/history", icon: Clock },
@@ -170,85 +159,91 @@ export const StudentNavItems = [
     title: "Career",
     url: "/student/career",
     icon: Briefcase,
+    isActive: false,
     items: [
-      {
-        title: "Internship Opportunities",
-        url: "/student/career/internships",
-        icon: Link,
-      },
       { title: "Job Postings", url: "/student/career/jobs", icon: Briefcase },
-      {
-        title: "My Applications",
-        url: "/student/career/applications",
-        icon: ClipboardList,
-      },
-    ],
-  },
-  {
-    title: "Library",
-    url: "/student/library",
-    icon: Library,
-    items: [
-      { title: "Catalog", url: "/student/library/catalog", icon: BookOpen },
-      {
-        title: "Digital Resources",
-        url: "/student/library/digital",
-        icon: Link,
-      },
-      {
-        title: "My Borrowings",
-        url: "/student/library/borrowings",
-        icon: ClipboardList,
-      },
     ],
   },
   {
     title: "Messages",
     url: "/student/messages",
     icon: MessageSquare,
+    isActive: false,
+    items: [
+      {
+        title: "Inbox",
+        url: "/student/messages/inbox",
+        icon: Inbox,
+      },
+      {
+        title: "Sent",
+        url: "/student/messages/sent",
+        icon: Pencil,
+      },
+    ],
   },
   {
     title: "Profile",
     url: "/student/profile",
     icon: User,
+    isActive: false,
+    items: [
+      {
+        title: "View Profile",
+        url: "/student/profile/view",
+        icon: User,
+      },
+      {
+        title: "Edit Profile",
+        url: "/student/profile/edit",
+        icon: Pencil,
+      },
+    ],
   },
   {
     title: "Settings",
     url: "/student/settings",
     icon: Settings,
+    isActive: false,
+    items: [
+      {
+        title: "Account Settings",
+        url: "/student/settings/account",
+        icon: UserCog,
+      },
+    ],
   },
   {
-    title: "Help & Support",
-    url: "/student/help",
-    icon: LifeBuoy,
-  },
-]
-
-export const StudentQuickAccess = [
-  {
-    name: "Today's Classes",
-    url: "/student/timetable/today",
-    icon: Calendar,
-  },
-  {
-    name: "Attendance",
-    url: "/student/attendance/status",
-    icon: ClipboardList,
-  },
-  { name: "Grades", url: "/student/grades", icon: GraduationCap },
-  { name: "Notifications", url: "/student/notifications", icon: Bell },
-  { name: "Messages", url: "/student/messages", icon: MessageSquare },
-]
-
-export const StudentProjects = [
-  {
-    name: "Capstone Project",
-    url: "/student/projects/capstone",
-    icon: BookOpen,
-  },
-  {
-    name: "Research Initiative",
-    url: "/student/projects/research",
-    icon: Gauge,
+    title: "Quick Access",
+    url: "/student/quick-access",
+    icon: Zap,
+    isActive: false,
+    items: [
+      {
+        title: "Today's Classes",
+        url: "/student/timetable/today",
+        icon: Calendar,
+      },
+      {
+        title: "Attendance",
+        url: "/student/attendance/status",
+        icon: ClipboardList,
+      },
+      {
+        title: "Grades",
+        url: "/student/grades",
+        icon: GraduationCap,
+      },
+      {
+        title: "Notifications",
+        url: "/student/notifications",
+        icon: Bell,
+      },
+      {
+        title: "Messages",
+        url: "/student/messages",
+        icon: MessageSquare,
+      },
+    ],
   },
 ]

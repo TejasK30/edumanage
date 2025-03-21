@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
 import ProgressBar from "@/components/ProgressBar"
 import Step1Form, { Step1Values } from "@/components/forms/Step1Form"
 import Step2Form, { Step2Values } from "@/components/forms/Step2Form"
 import Step3Preview from "@/components/forms/Step3Form"
 import Step4Success from "@/components/forms/Step4Form"
 import { Step } from "@/types"
+import { useState } from "react"
 
 export type ProcessedStep1Values = Omit<
   Step1Values,

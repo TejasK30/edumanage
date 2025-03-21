@@ -21,13 +21,13 @@ import usePasswordVisibility from "@/hooks/usePasswordVisibility"
 import { Eye, EyeOff } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import "dotenv/config"
+import api from "@/lib/api/api"
+import { useUserStore } from "@/store/user-store"
 
 const signupSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
     phone: z.object({
       countryCode: z.string().min(1, "Country code is required"),
       number: z
@@ -35,6 +35,8 @@ const signupSchema = z
         .min(10, "Phone number must be at least 10 digits")
         .regex(/^\d+$/, "Phone number must contain only digits"),
     }),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match",
@@ -51,6 +53,7 @@ export function SignUpForm({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [signupType, setSignupType] = useState("student")
+  const { setUser } = useUserStore()
 
   const {
     handleSubmit,
@@ -71,32 +74,17 @@ export function SignUpForm({
     setIsLoading(true)
     setError(null)
     try {
-      console.log(process.env.NEXT_PUBLIC_API_URL)
+      const { confirmPassword, ...restData } = data
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            phone: {
-              countryCode: data.phone.countryCode,
-              number: data.phone.number,
-            },
-            role: signupType,
-          }),
-        }
-      )
-
-      const result = await response.json()
-      console.log(response)
-
-      if (!response.ok) {
-        throw new Error(result.error || "Signup failed")
+      const dataToSend = {
+        ...restData,
+        role: signupType,
       }
+
+      const res = await api.post("/auth/register", dataToSend)
+
+      setUser(res.data)
+
       router.push("/verify-email")
     } catch (err: unknown) {
       if (err instanceof Error) {

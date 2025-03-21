@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer"
 import TitleSection from "@/components/landing-page/titile-section"
 import Navbar from "@/components/Navbar"
-import { FEATURES } from "@/lib/constants"
+import { FEATURES } from "@/lib/site-constants"
 import { ArrowRight } from "lucide-react"
 
 const FeaturesPage = () => {
@@ -51,8 +51,6 @@ const FeaturesPage = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }

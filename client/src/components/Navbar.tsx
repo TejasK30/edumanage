@@ -3,11 +3,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Menu, ArrowRight } from "lucide-react"
-import { NAVIGATION } from "@/lib/constants"
+import { NAVIGATION } from "@/lib/site-constants"
 import ThemeToggle from "./theme-toggle"
+import { useAuthStore } from "@/store/auth-store"
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user } = useAuthStore()
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-background/80 backdrop-blur-md z-50">
@@ -92,14 +94,24 @@ const Navbar: React.FC = () => {
                 : "translate-x-4 opacity-0"
             }`}
           >
-            <Link href="/login" className="block">
-              <Button variant="outline" className="w-full">
-                Log in
-              </Button>
-            </Link>
-            <Link href="/signup" className="block">
-              <Button className="w-full">Sign up</Button>
-            </Link>
+            {user ? (
+              <Link href="/dashboard" className="block">
+                <Button variant="outline" className="w-full">
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className="block">
+                  <Button variant="outline" className="w-full">
+                    Log in
+                  </Button>
+                </Link>
+                <Link href="/signup" className="block">
+                  <Button className="w-full">Sign up</Button>
+                </Link>
+              </>
+            )}
           </div>
           <div className="px-3 py-2">
             <ThemeToggle />

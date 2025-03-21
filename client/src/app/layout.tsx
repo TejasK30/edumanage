@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@/lib/providers/next-theme-provider"
+import { ReactQueryProvider } from "@/lib/providers/react-query-provider"
 import { QueryClient } from "@tanstack/react-query"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { twMerge } from "tailwind-merge"
-import { ReactQueryProvider } from "@/lib/providers/react-query-provider"
 import "./globals.css"
 
 const inter = Inter({
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description: "A comprehensive education management system",
 }
 
+//@ts/ignore
 const queryClient = new QueryClient()
 
 export default function RootLayout({

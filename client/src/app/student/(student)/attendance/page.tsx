@@ -1,49 +1,47 @@
 "use client"
-import React, { useEffect } from "react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Loader2,
-  Clock,
   Calendar,
-  UserCheck,
   CheckCircle as CheckCheck,
+  Clock,
+  Loader2,
   Search,
+  UserCheck,
 } from "lucide-react"
+import React, { useEffect } from "react"
 
 import AttendanceRecordDialog from "@/components/AttendanceRecordDialog"
-import { useStudentAttendanceStore } from "@/store/studentAttendanceStore"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useStudentAttendanceStore } from "@/store/studentAttendanceStore"
 import { ActiveSession } from "@/types/attendance"
 
 const StudentAttendanceDashboard: React.FC = () => {
   const {
-    classes,
     activeSessions,
     attendanceRecords,
     attendanceSummary,

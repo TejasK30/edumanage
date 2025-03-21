@@ -1,5 +1,4 @@
-import Logo from "@/components/logo"
-import React, { ReactNode } from "react"
+import { ReactNode } from "react"
 
 type DefaultLayoutProps = {
   children: ReactNode

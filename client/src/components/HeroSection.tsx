@@ -69,7 +69,7 @@ const HeroSection = () => {
         <div className="mt-20 relative">
           <div className="relative rounded-2xl overflow-hidden border border-primary/10 shadow-2xl">
             <Image
-              src="/dashboard.png"
+              src="/dashboard1.png"
               alt="Dashboard Preview"
               width={1920}
               height={1080}

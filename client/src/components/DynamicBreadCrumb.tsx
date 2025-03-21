@@ -84,11 +84,7 @@ const DynamicBreadcrumb: React.FC = () => {
         <BreadcrumbItem key={item.url}>
           <BreadcrumbLink
             href={item.url}
-            className={`hover:text-indigo-800 ${
-              index === breadcrumbTrail.length - 1
-                ? "text-indigo-600"
-                : "text-gray-900 font-bold"
-            }`}
+            className={`hover:text-indigo-800 text-indigo-600`}
           >
             {item.title}
           </BreadcrumbLink>

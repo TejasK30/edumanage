@@ -1,18 +1,17 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavUser } from "./nav-user"
-import { TeamSwitcher } from "./team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
 } from "./ui/sidebar"
+import { AdminNavItems } from "@/constants/adminConstants"
 import { Building2, DollarSign, School } from "lucide-react"
-import { AdminNavItems, AdminQuickAccess } from "@/constants/adminConstants"
+import React, { useEffect, useState } from "react"
+import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
+import { TeamSwitcher } from "./team-switcher"
 
 type AdminSidebarProps = React.ComponentProps<typeof Sidebar> & {
   adminId?: string
@@ -73,7 +72,6 @@ export default function AdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={AdminNavItems} />
-        <NavProjects projects={AdminQuickAccess} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={adminData.user} />

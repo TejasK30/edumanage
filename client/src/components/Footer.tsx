@@ -1,5 +1,5 @@
+import { FOOTER_LINKS } from "@/lib/site-constants"
 import Link from "next/link"
-import { FOOTER_LINKS } from "@/lib/constants"
 
 const Footer = () => {
   return (

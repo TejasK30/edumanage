@@ -1,5 +1,5 @@
 import TitleSection from "@/components/landing-page/titile-section"
-import { TESTIMONIALS } from "@/lib/constants"
+import { TESTIMONIALS } from "@/lib/site-constants"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const TestimonialsSection = () => {

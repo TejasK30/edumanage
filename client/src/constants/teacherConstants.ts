@@ -1,7 +1,6 @@
 import {
   Award,
   BarChart2,
-  BookMarked,
   BookOpen,
   Briefcase,
   Calendar,
@@ -12,7 +11,6 @@ import {
   GraduationCap,
   Home,
   Inbox,
-  LifeBuoy,
   MessageSquare,
   School,
   Settings,
@@ -27,11 +25,6 @@ export const TeacherNavItems = [
     isActive: true,
     items: [
       { title: "Overview", url: "/teacher/dashboard/overview", icon: Gauge },
-      {
-        title: "Statistics",
-        url: "/teacher/dashboard/statistics",
-        icon: BarChart2,
-      },
     ],
   },
   {
@@ -53,20 +46,19 @@ export const TeacherNavItems = [
     ],
   },
   {
-    title: "Resources",
-    url: "/teacher/resources",
-    icon: BookMarked,
+    title: "LMS Modules",
+    url: "/teacher/lms-modules",
+    icon: BookOpen,
     items: [
-      { title: "My Resources", url: "/teacher/resources/my", icon: BookOpen },
       {
-        title: "Create Resource",
-        url: "/teacher/resources/create",
-        icon: FileText,
+        title: "Materials",
+        url: "/teacher/lms-modules/materials",
+        icon: BookOpen,
       },
       {
-        title: "LMS Modules",
-        url: "/teacher/resources/lms",
-        icon: BookMarked,
+        title: "Polls",
+        url: "/teacher/lms-modules/polls",
+        icon: CheckSquare,
       },
     ],
   },
@@ -97,7 +89,6 @@ export const TeacherNavItems = [
         url: "/teacher/exams/schedule",
         icon: Calendar,
       },
-      { title: "Grade Exams", url: "/teacher/exams/grade", icon: FileText },
     ],
   },
   {
@@ -115,7 +106,6 @@ export const TeacherNavItems = [
         url: "/teacher/students/attendance",
         icon: ClipboardList,
       },
-      { title: "Grading", url: "/teacher/students/grading", icon: Award },
     ],
   },
   {
@@ -150,34 +140,5 @@ export const TeacherNavItems = [
     title: "Settings",
     url: "/teacher/settings",
     icon: Settings,
-  },
-  {
-    title: "Help",
-    url: "/teacher/help",
-    icon: LifeBuoy,
-  },
-]
-
-export const TeacherQuickAccess = [
-  { name: "Today's Classes", url: "/teacher/classes/today", icon: School },
-  {
-    name: "Mark Attendance",
-    url: "/teacher/attendance/mark",
-    icon: ClipboardList,
-  },
-  {
-    name: "Pending Grades",
-    url: "/teacher/grading/pending",
-    icon: CheckSquare,
-  },
-  { name: "New Messages", url: "/teacher/messages/unread", icon: Inbox },
-]
-
-export const TeacherProjectItems = [
-  { name: "Research Initiative", url: "/teacher/research", icon: Award },
-  {
-    name: "Curriculum Development",
-    url: "/teacher/curriculum",
-    icon: BookOpen,
   },
 ]

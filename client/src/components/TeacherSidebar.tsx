@@ -1,5 +1,7 @@
 "use client"
+
 import React, { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 import {
   Sidebar,
   SidebarContent,
@@ -7,15 +9,17 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
-import { Award, BookOpen } from "lucide-react"
+import { Award, BookOpen, Sun, Moon, Laptop } from "lucide-react"
+import { TeacherNavItems } from "@/constants/teacherConstants"
 import {
-  TeacherNavItems,
-  TeacherProjectItems,
-  TeacherQuickAccess,
-} from "@/constants/teacherConstants"
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 type TeacherSidebarProps = React.ComponentProps<typeof Sidebar> & {
   teacherId?: string
@@ -44,8 +48,8 @@ export default function TeacherSidebar({
           { name: "Science Faculty", logo: Award, plan: "Department" },
         ],
   })
-
   const [isLoading, setIsLoading] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     if (teacherId) {
@@ -77,10 +81,42 @@ export default function TeacherSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={TeacherNavItems} />
-        <NavProjects projects={TeacherQuickAccess} />
-        <NavProjects projects={TeacherProjectItems} />
       </SidebarContent>
       <SidebarFooter>
+        <div className="mb-4 px-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full">
+                Theme:{" "}
+                {theme === "dark"
+                  ? "Dark"
+                  : theme === "light"
+                  ? "Light"
+                  : "System"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => setTheme("light")}>
+                <div className="flex items-center gap-2">
+                  <Sun className="w-4 h-4" />
+                  <span>Light</span>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme("dark")}>
+                <div className="flex items-center gap-2">
+                  <Moon className="w-4 h-4" />
+                  <span>Dark</span>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme("system")}>
+                <div className="flex items-center gap-2">
+                  <Laptop className="w-4 h-4" />
+                  <span>System</span>
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <NavUser user={teacherData.user} />
       </SidebarFooter>
     </Sidebar>
