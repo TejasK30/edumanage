@@ -14,8 +14,8 @@ router.post("/login", LoginController)
 
 router.post("/register", RegisterController)
 
-router.post("/api/auth/verify-email", verifyEmail)
-router.post("/api/auth/resend-otp", resendOTP)
-router.get("/api/auth/profile", isAuthenticated, ProfileController)
+router.post("/verify-email", verifyEmail)
+router.post("/resend-otp", resendOTP)
+router.get("/profile", isAuthenticated, ProfileController)
 
 export default router

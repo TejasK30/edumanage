@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import { transporter } from "../../../config/emailConfig"
 
 export interface EmailTemplate {
   subject: string
@@ -50,14 +50,6 @@ export const createWelcomeEmail = (name: string): EmailTemplate => ({
 })
 
 export const sendWelcomeEmail = async (to: string, name: string) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  })
-
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,

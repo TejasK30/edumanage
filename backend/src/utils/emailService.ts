@@ -1,19 +1,9 @@
-import nodemailer from "nodemailer"
+import { transporter } from "../config/emailConfig"
+import dotenv from "dotenv"
 import { readFileSync } from "fs"
 import { join } from "path"
-import dotenv from "dotenv"
 
 dotenv.config()
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.example.com",
-  port: parseInt(process.env.EMAIL_PORT || "587"),
-  secure: process.env.EMAIL_SECURE === "true",
-  auth: {
-    user: process.env.EMAIL_USER || "",
-    pass: process.env.EMAIL_PASSWORD || "",
-  },
-})
 
 const templateCache: Record<string, string> = {}
 
@@ -53,11 +43,7 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
     const html = compileTemplate(template, options.context)
 
     await transporter.sendMail({
-      from:
-        options.from ||
-        `"Learning Platform" <${
-          process.env.EMAIL_FROM || "notifications@example.com"
-        }>`,
+      from: options.from || `"Learning Platform" <${process.env.EMAIL_FROM}>`,
       to: options.to,
       subject: options.subject,
       html,

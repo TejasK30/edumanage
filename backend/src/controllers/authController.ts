@@ -2,11 +2,17 @@ import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
+import { z } from "zod"
 import {
   sendVerificationEmail,
   sendWelcomeEmail,
 } from "../templates/email/templates/verificationEmail"
 import { generateCustomId, generateOTP } from "../utils/authUtils"
+
+const loginSchema = z.object({
+  identifier: z.string().min(1, "Identifier is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+})
 
 const prisma = new PrismaClient()
 
@@ -16,6 +22,8 @@ export const RegisterController = async (
 ): Promise<any> => {
   try {
     const data = req.body
+
+    console.log(data)
 
     // Check if user with email already exists
     const existingUser = await prisma.user.findUnique({
@@ -48,11 +56,8 @@ export const RegisterController = async (
         data: {
           name: data.name,
           email: data.email,
-          passwordHash: hashedPassword,
-          phone: {
-            countryCode: data.phone.countryCode,
-            number: data.phone.number,
-          },
+          password: hashedPassword,
+          phone: data.phone,
           role: data.role,
           customId: customId,
           verificationOTP: otp,
@@ -109,7 +114,7 @@ export const RegisterController = async (
     })
 
     // Send verification email
-    // await sendVerificationEmail(result.email, result.name, otp)
+    await sendVerificationEmail(result.email, result.name, otp)
 
     return res.status(201).json({
       message:
@@ -231,20 +236,21 @@ export const LoginController = async (
   res: Response
 ): Promise<any> => {
   try {
-    const { identifier, password } = req.body
+    const validatedData = loginSchema.parse(req.body)
+
     let user
 
-    if (/^\S+@\S+\.\S+$/.test(identifier)) {
+    if (/^\S+@\S+\.\S+$/.test(validatedData.identifier)) {
       user = await prisma.user.findUnique({
-        where: { email: identifier },
+        where: { email: validatedData.identifier },
       })
-    } else if (/^\+?\d+$/.test(identifier)) {
-      user = await prisma.user.findUnique({
-        where: { phone: identifier },
+    } else if (/^\+?\d+$/.test(validatedData.identifier)) {
+      user = await prisma.user.findFirst({
+        where: { phone: validatedData.identifier },
       })
     } else {
       user = await prisma.user.findUnique({
-        where: { customId: identifier },
+        where: { customId: validatedData.identifier },
       })
     }
 
@@ -260,7 +266,10 @@ export const LoginController = async (
       })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash)
+    const isPasswordValid = await bcrypt.compare(
+      validatedData.password,
+      user.password
+    )
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid credentials" })
     }

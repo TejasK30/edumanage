@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, JSX } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-
+import axios from "axios"
 import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,26 +22,25 @@ import {
 } from "@/components/ui/input-otp"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
+import api from "@/lib/api/api"
 
 const FormSchema = z.object({
-  otp: z.string().min(6, {
-    message: "Your OTP must be exactly 6 digits.",
-  }),
+  otp: z.string().min(6, { message: "Your OTP must be exactly 6 digits." }),
 })
 
-export default function VerifyEmailPage() {
+type FormValues = z.infer<typeof FormSchema>
+
+export default function VerifyEmailPage(): JSX.Element {
   const { toast } = useToast()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string | null>(null)
   const [remainingTime, setRemainingTime] = useState<number>(0)
   const [canResend, setCanResend] = useState<boolean>(false)
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      otp: "",
-    },
+    defaultValues: { otp: "" },
   })
 
   useEffect(() => {
@@ -64,11 +63,7 @@ export default function VerifyEmailPage() {
       setCanResend(true)
       return
     }
-
-    const timer = setTimeout(() => {
-      setRemainingTime((prev) => prev - 1)
-    }, 1000)
-
+    const timer = setTimeout(() => setRemainingTime((prev) => prev - 1), 1000)
     return () => clearTimeout(timer)
   }, [remainingTime])
 
@@ -80,7 +75,7 @@ export default function VerifyEmailPage() {
       .padStart(2, "0")}`
   }
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit({ otp }: FormValues): Promise<void> {
     if (!email) {
       toast({
         title: "Email Not Found",
@@ -92,41 +87,24 @@ export default function VerifyEmailPage() {
 
     setIsLoading(true)
     try {
-      const response = await fetch("/api/verify-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          otp: data.otp,
-        }),
+      const response = await api.post("/auth/verify-email", { email, otp })
+
+      toast({
+        title: "Verification Successful",
+        description:
+          "Your email has been verified. Redirecting to dashboard...",
       })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: "Verification Successful",
-          description:
-            "Your email has been verified. Redirecting to dashboard...",
-        })
-
-        // Clear email from localStorage after successful verification
-        localStorage.removeItem("userEmail")
-        router.push("/auth/login")
-      } else {
-        toast({
-          title: "Verification Failed",
-          description: result.error || "Invalid verification code.",
-          variant: "destructive",
-        })
-      }
+      localStorage.removeItem("userEmail")
+      router.push("/login")
     } catch (error) {
       console.error(error)
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.error || "Invalid verification code."
+        : "Something went wrong. Please try again."
+
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
+        title: "Verification Failed",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -134,41 +112,29 @@ export default function VerifyEmailPage() {
     }
   }
 
-  const handleResendOTP = async () => {
+  const handleResendOTP = async (): Promise<void> => {
     if (!email || !canResend) return
 
     setIsLoading(true)
     try {
-      const response = await fetch("/api/resend-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+      await api.post("/auth/resend-otp", { email })
+
+      toast({
+        title: "OTP Resent",
+        description: "A new verification code has been sent to your email.",
       })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: "OTP Resent",
-          description: "A new verification code has been sent to your email.",
-        })
-        form.reset({ otp: "" })
-        setRemainingTime(900)
-        setCanResend(false)
-      } else {
-        toast({
-          title: "Failed to Resend",
-          description: result.error || "Could not send verification code.",
-          variant: "destructive",
-        })
-      }
+      form.reset({ otp: "" })
+      setRemainingTime(900)
+      setCanResend(false)
     } catch (error) {
       console.error(error)
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.error || "Could not send verification code."
+        : "Something went wrong. Please try again."
+
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
+        title: "Failed to Resend",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -177,10 +143,10 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-background">
       <div className="flex w-full max-w-sm flex-col gap-6">
-        <Logo />
-        <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+        <div className="w-full max-w-md p-8 bg-muted rounded-2xl shadow-lg">
+          <Logo />
           <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
             Verify Your Email
           </h1>

@@ -1,7 +1,7 @@
-import cookieParser from "cookie-parser"
-import cors from "cors"
-import "dotenv/config"
 import express from "express"
+import cors from "cors"
+import cookieParser from "cookie-parser"
+import "dotenv/config"
 
 import academicRoutes from "./routes/academic.routes"
 import attendanceRoutes from "./routes/attendanceRoutes"
@@ -36,7 +36,7 @@ declare global {
         customId: string
         email: string
         phone: any
-        passwordHash: string
+        password: string
         role: "teacher" | "staff" | "student" | string
         isVerified: boolean
         verificationOTP: string | null

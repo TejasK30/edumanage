@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import { transporter } from "../../../config/emailConfig"
 
 export interface EmailTemplate {
   subject: string
@@ -112,14 +112,6 @@ export const sendVerificationEmail = async (
   name: string,
   otp: string
 ) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  })
-
   const mailOptions = {
     from: `"${process.env.NEXT_PUBLIC_APP_NAME || "Our App"}" <${
       process.env.EMAIL_USER
@@ -132,14 +124,6 @@ export const sendVerificationEmail = async (
 }
 
 export const sendWelcomeEmail = async (to: string, name: string) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  })
-
   const mailOptions = {
     from: `"${process.env.NEXT_PUBLIC_APP_NAME || "Our App"}" <${
       process.env.EMAIL_USER

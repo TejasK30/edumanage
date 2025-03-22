@@ -55,7 +55,7 @@ export function LoginForm({
 
       setUser(res.data)
 
-      router.push("/student/dashboard")
+      router.push(`/${res?.data?.role}/dashboard`)
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred")
     } finally {

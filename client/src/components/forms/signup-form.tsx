@@ -28,13 +28,10 @@ const signupSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
-    phone: z.object({
-      countryCode: z.string().min(1, "Country code is required"),
-      number: z
-        .string()
-        .min(10, "Phone number must be at least 10 digits")
-        .regex(/^\d+$/, "Phone number must contain only digits"),
-    }),
+    phone: z
+      .string()
+      .min(10, "Phone number must be at least 10 digits")
+      .regex(/^\d+$/, "Phone number must contain only digits"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
   })
@@ -84,7 +81,7 @@ export function SignUpForm({
       const res = await api.post("/auth/register", dataToSend)
 
       setUser(res.data)
-
+      localStorage.setItem("userEmail", data.email)
       router.push("/verify-email")
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -159,28 +156,14 @@ export function SignUpForm({
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <div className="flex">
-                    <select
-                      {...register("phone.countryCode")}
-                      defaultValue="+91"
-                      className="border border-gray-300 rounded-l"
-                    >
-                      <option value="+91">+91 (India)</option>
-                      <option value="+1">+1 (USA)</option>
-                      <option value="+44">+44 (UK)</option>
-                    </select>
-                    <Input
-                      id="phone"
-                      type="text"
-                      placeholder="1234567890"
-                      {...register("phone.number")}
-                      className="rounded-r-md"
-                    />
-                  </div>
-                  {errors.phone?.number && (
-                    <p className="text-red-600">
-                      {errors.phone.number.message}
-                    </p>
+                  <Input
+                    id="phone"
+                    type="text"
+                    placeholder="1234567890"
+                    {...register("phone")}
+                  />
+                  {errors.phone && (
+                    <p className="text-red-600">{errors.phone.message}</p>
                   )}
                 </div>
                 <div className="grid gap-2 relative">
